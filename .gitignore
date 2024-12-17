@@ -36,3 +36,10 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+#local
+scripts/
+hooks/
+constants/
+components/
+assets/
