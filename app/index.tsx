@@ -1,12 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { StackActions, useNavigation } from '@react-navigation/native';
 
 const Login = () => {
 
-    const navigation = useNavigation();
+  const router = useRouter()
+
 
     const [uname, setUname] = useState('');
     const [pword, setPword] = useState('');
@@ -16,20 +16,23 @@ const Login = () => {
         setWarn('');
     }, [])
 
-    // useEffect(() => {
-    //     autoTokenCheck()
-    // }, [])
+    useEffect(() => {
+        autoTokenCheck()
+    }, [])
 
-    const storeToken = async (token: string) => {
+    const storeToken = async (token: string, user: string) => {
         await AsyncStorage.setItem('token', token)
+        await AsyncStorage.setItem('user', user)
     };
 
     const clearToken = async () => {
         await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('user')
     };
 
     const autoTokenCheck = async () => {
         const token = await AsyncStorage.getItem('token');
+        const user = await AsyncStorage.getItem('user')
 
         const req = {
             method: "POST",
@@ -39,7 +42,7 @@ const Login = () => {
             body: JSON.stringify(token)
         };
 
-        fetch('http://10.0.2.2:8080/dev/v1/authtoken', req)
+        fetch('http://10.0.2.2:8080/dev/v1/users/authtoken', req)
         .then((res) => {
             if (!res.ok) {
                 throw new Error("Fuck you")
@@ -48,12 +51,10 @@ const Login = () => {
         })
         .then((data) => {
             // console.log(data.Data) // DEBUG
-            navigation.dispatch(StackActions.replace('(tabs)'))
+            router.replace({ pathname: '/(tabs)/home', params: { name: user }})
         })
         .catch((e) => {
-            // console.log(e) // DEBUG
             setWarn('')
-            navigation.dispatch(StackActions.replace('index'))
         })
     
     }
@@ -63,7 +64,7 @@ const Login = () => {
         clearToken()
 
         if (uname == '' || pword == '') {
-            setWarn('Invalid username or password');
+            setWarn('Invalid username or aqpassword');
             return;
         };
 
@@ -80,7 +81,7 @@ const Login = () => {
             body: JSON.stringify(ob)
         };
 
-        fetch('http://10.0.2.2:8080/dev/v1/auth', req)
+        fetch('http://10.0.2.2:8080/dev/v1/users/auth', req)
         .then(res => {
             if (!res.ok) {
                 throw new Error("Incorrect username or password");
@@ -89,8 +90,8 @@ const Login = () => {
         })
         .then(data => {
             setWarn('')
-            storeToken(data.Data)
-            navigation.dispatch(StackActions.replace('(tabs)'));
+            storeToken(data.Data, uname)
+            router.replace({ pathname: '/(tabs)/home', params: { name: uname }})
         })
         .catch((e) => {
             setWarn('Invalid username or password');
