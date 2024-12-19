@@ -1,6 +1,7 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
+  ExternalPathString,
   Link,
   Router,
   useGlobalSearchParams,
@@ -22,7 +23,7 @@ export const BookItem = ({book_id, title, author}: Book) => {
   const router = useRouter()
 
   const nav = () => {
-    router.push({pathname: `/books/${book_id}`, params: {id: book_id, title: title, author: author}})
+    router.push({pathname: `/books/[book]`, params: {book: title,id: book_id, title: title, author: author}})
   }
 
   return (
@@ -48,7 +49,7 @@ const Home = () => {
   };
 
   const [token, setToken] = useState();
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -118,11 +119,11 @@ const Home = () => {
       return res.json()
     })
     .then((data) => {
-      const body: [] = data.Data;
-      for (let i=0; i<body.length; i++) {
-        console.log(body[i])
-      }
-      setBooks(body)
+      // const body: [] = data.Data; // DEBUG
+      // for (let i=0; i<body.length; i++) {
+      //   console.log(body[i])
+      // }
+      setBooks(data.Data)
       setLoading(false)
     })
     .catch((e) => {
