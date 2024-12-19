@@ -51,10 +51,11 @@ const Login = () => {
         })
         .then((data) => {
             // console.log(data.Data) // DEBUG
-            router.replace({ pathname: '/(tabs)/home', params: { name: user }})
+            router.replace({ pathname: '/(tabs)/home', params: { name: user, auth: token }})
         })
         .catch((e) => {
             setWarn('')
+            clearToken()
         })
     
     }
@@ -91,7 +92,7 @@ const Login = () => {
         .then(data => {
             setWarn('')
             storeToken(data.Data, uname)
-            router.replace({ pathname: '/(tabs)/home', params: { name: uname }})
+            router.replace({ pathname: '/(tabs)/home', params: { name: uname, auth: data.Data }})
         })
         .catch((e) => {
             setWarn('Invalid username or password');
@@ -108,6 +109,10 @@ const Login = () => {
         placeholderTextColor={"hsl(21, 78%, 48%)"}
         underlineColorAndroid={"hsl(21, 78%, 48%)"}
         placeholder="Username"
+        autoCapitalize='none'
+        autoCorrect={false}
+        spellCheck={false}
+        maxLength={255}
         onChangeText={(text) => setUname(text)}
       />
       <Text style={styles.inputLbl}>Password:</Text>
@@ -117,6 +122,9 @@ const Login = () => {
         placeholderTextColor={"hsl(21, 78%, 48%)"}
         underlineColorAndroid={"hsl(21, 78%, 48%)"}
         placeholder="Password"
+        autoCorrect={false}
+        spellCheck={false}
+        maxLength={255}
         onChangeText={(text) => setPword(text)}
       />
       {/* <Text>{creds}</Text> DEBUG */}
@@ -165,6 +173,7 @@ const styles = StyleSheet.create({
   
     inputObj: {
       // backgroundColor: "lightgray",
+      backgroundColor: 'hsl(0, 0%, 100%)',
       width: "75%",
       height: 50,
       marginBottom: 50,

@@ -9,6 +9,7 @@ const _layout = () => {
   return (
     <Tabs screenOptions={{headerTitleAlign: 'center'}} >
         <Tabs.Screen name='home' options={{headerShown: true}} initialParams={{user: name}}/>
+        <Tabs.Screen name='search' options={{headerShown: true}} initialParams={{user: name}}/>
         <Tabs.Screen name='profile' options={{headerShown: true}} initialParams={{user: name}}/>
     </Tabs>
   )
