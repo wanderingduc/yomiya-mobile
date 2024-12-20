@@ -40,6 +40,6 @@ app-example
 #local
 scripts/
 hooks/
-constants/
 components/
 assets/
+TODO.txt

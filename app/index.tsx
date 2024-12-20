@@ -1,103 +1,146 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link, useRouter } from 'expo-router';
-import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Link, useRouter } from "expo-router";
+import React, { useState, useEffect } from "react";
+import Request from "@/constants/Request";
 
 const Login = () => {
+  const router = useRouter();
 
-  const router = useRouter()
+  const [uname, setUname] = useState("");
+  const [pword, setPword] = useState("");
+  const [warn, setWarn] = useState("");
+
+  useEffect(() => {
+    setWarn("");
+  }, []);
+
+  useEffect(() => {
+    autoTokenCheck();
+  }, []);
+
+  const storeToken = async (token: string, user: string) => {
+    await AsyncStorage.setItem("token", token);
+    await AsyncStorage.setItem("user", user);
+  };
+
+  const clearToken = async () => {
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
+  };
 
 
-    const [uname, setUname] = useState('');
-    const [pword, setPword] = useState('');
-    const [warn, setWarn] = useState('');
+  const autoTokenCheck = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem("user");
 
-    useEffect(() => {
-        setWarn('');
-    }, [])
+    if (!token || !user) {
+      return
+    }
 
-    useEffect(() => {
-        autoTokenCheck()
-    }, [])
+    const reqBody: Request = {
+      user: {
+        username: user,
+        password: null,
+        token: token,
+      },
+      book: null,
+      lib: null,
+    };
+    // console.log(reqBody)
 
-    const storeToken = async (token: string, user: string) => {
-        await AsyncStorage.setItem('token', token)
-        await AsyncStorage.setItem('user', user)
+    const req = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
     };
 
-    const clearToken = async () => {
-        await AsyncStorage.removeItem('token');
-        await AsyncStorage.removeItem('user')
-    };
+    // console.log(JSON.parse(req.body))
 
-    const autoTokenCheck = async () => {
-        const token = await AsyncStorage.getItem('token');
-        const user = await AsyncStorage.getItem('user')
-
-        const req = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(token)
-        };
-
-        fetch('http://10.0.2.2:8080/dev/v1/users/authtoken', req)
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error("Fuck you")
-            }
-            return res.json();
-        })
-        .then((data) => {
-            // console.log(data.Data) // DEBUG
-            router.replace({ pathname: '/(tabs)/home', params: { name: user, auth: token }})
-        })
-        .catch((e) => {
-            setWarn('')
-            clearToken()
-        })
     
+
+    fetch("http://10.0.2.2:8080/dev/v1/users/authtoken", req)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Fuck you");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // console.log(data.Data) // DEBUG
+        router.replace({
+          pathname: "/(tabs)/home",
+          params: { name: user, auth: token },
+        });
+      })
+      .catch((e) => {
+        setWarn("");
+        // console.log("REj")
+        clearToken();
+      });
+  };
+
+  const signin = () => {
+    clearToken();
+
+    if (uname == "" || pword == "") {
+      setWarn("Invalid username or aqpassword");
+      return;
     }
 
-    const signin = () => {
+    const reqBody: Request = {
+      user: {
+        username: uname,
+        password: pword,
+        token: "",
+      },
+      book: {
+        book_id: "",
+        title: "",
+        author: "",
+      },
+      lib: {
+        lib_id: "",
+        lib_name: "",
+      },
+    };
 
-        clearToken()
+    const req = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
+    };
 
-        if (uname == '' || pword == '') {
-            setWarn('Invalid username or aqpassword');
-            return;
-        };
-
-        const ob = {
-            username: uname,
-            password: pword
-        };
-
-        const req = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(ob)
-        };
-
-        fetch('http://10.0.2.2:8080/dev/v1/users/auth', req)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("Incorrect username or password");
-            }
-            return res.json();
-        })
-        .then(data => {
-            setWarn('')
-            storeToken(data.Data, uname)
-            router.replace({ pathname: '/(tabs)/home', params: { name: uname, auth: data.Data }})
-        })
-        .catch((e) => {
-            setWarn('Invalid username or password');
-        })
-    }
+    fetch("http://10.0.2.2:8080/dev/v1/users/auth", req)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Incorrect username or password");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setWarn("");
+        storeToken(data.Data.user.token, uname);
+        router.replace({
+          pathname: "/(tabs)/home",
+          params: { name: uname, auth: data.Data.user.token },
+        });
+      })
+      .catch((e) => {
+        setWarn("Invalid username or password");
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -109,7 +152,7 @@ const Login = () => {
         placeholderTextColor={"hsl(21, 78%, 48%)"}
         underlineColorAndroid={"hsl(21, 78%, 48%)"}
         placeholder="Username"
-        autoCapitalize='none'
+        autoCapitalize="none"
         autoCorrect={false}
         spellCheck={false}
         maxLength={255}
@@ -128,84 +171,80 @@ const Login = () => {
         onChangeText={(text) => setPword(text)}
       />
       {/* <Text>{creds}</Text> DEBUG */}
-      <TouchableOpacity 
-      style={styles.inputBtn}
-      onPress={signin}>
-        <Text style={styles.inputBtnTxt}>
-          Login
-        </Text>
+      <TouchableOpacity style={styles.inputBtn} onPress={signin}>
+        <Text style={styles.inputBtnTxt}>Login</Text>
       </TouchableOpacity>
-      <Text style={styles.create}>Don't have an account? <Link style={styles.link} href='/'>Create one</Link></Text>
+      <Text style={styles.create}>
+        Don't have an account?{" "}
+        <Link style={styles.link} href="/">
+          Create one
+        </Link>
+      </Text>
     </View>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: "hsl(21, 100%, 100%)",
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-  
-    logo: {
-      fontSize: 50,
-      marginBottom: 35,
-      color: 'hsl(21, 78%, 48%)'
-    },
+  container: {
+    backgroundColor: "hsl(21, 100%, 100%)",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-    warning: {
-        marginBottom: 40,
-        color: 'red',
-        fontSize: 15
-    },
-  
-    inputLbl: {
-      // backgroundColor: "lightblue",
-      fontSize: 22,
-      width: '75%',
-      color: 'hsl(21, 78%, 48%)',
-      paddingLeft: 3
-  
-    },
-  
-    inputObj: {
-      // backgroundColor: "lightgray",
-      backgroundColor: 'hsl(0, 0%, 100%)',
-      width: "75%",
-      height: 50,
-      marginBottom: 50,
-      color: "hsl(21, 78%, 48%)",
-      fontSize: 20,
+  logo: {
+    fontSize: 50,
+    marginBottom: 35,
+    color: "hsl(21, 78%, 48%)",
+  },
 
-    },
-  
-    inputBtn: {
-      width: '35%',
-      height: 50,
-      backgroundColor: 'hsl(21, 78%, 48%)',
-      borderRadius: 25,
-      marginTop: 50
-  
-    },
-  
-    inputBtnTxt: {
-      margin: 'auto',
-      textAlign: 'center',
-      fontSize: 25,
-      color: 'hsl(21, 100%, 100%)'
-    },
+  warning: {
+    marginBottom: 40,
+    color: "red",
+    fontSize: 15,
+  },
 
-    create: {
-        marginTop: 35,
-        fontSize: 15
-    },
+  inputLbl: {
+    // backgroundColor: "lightblue",
+    fontSize: 22,
+    width: "75%",
+    color: "hsl(21, 78%, 48%)",
+    paddingLeft: 3,
+  },
 
-    link: {
-        color: 'blue'
-    }
-  
-  });
-  
+  inputObj: {
+    // backgroundColor: "lightgray",
+    // backgroundColor: "hsl(0, 0%, 100%)",
+    width: "75%",
+    height: 50,
+    marginBottom: 50,
+    color: "hsl(21, 78%, 48%)",
+    fontSize: 20,
+  },
+
+  inputBtn: {
+    width: "35%",
+    height: 50,
+    backgroundColor: "hsl(21, 78%, 48%)",
+    borderRadius: 25,
+    marginTop: 50,
+  },
+
+  inputBtnTxt: {
+    margin: "auto",
+    textAlign: "center",
+    fontSize: 25,
+    color: "hsl(21, 100%, 100%)",
+  },
+
+  create: {
+    marginTop: 35,
+    fontSize: 15,
+  },
+
+  link: {
+    color: "blue",
+  },
+});

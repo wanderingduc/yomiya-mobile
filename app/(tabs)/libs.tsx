@@ -1,0 +1,196 @@
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Stack,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import Request from "@/constants/Request";
+
+type LibO = {
+  libName: string;
+  libId: string
+};
+
+const LibItem = ({ libName, libId }: LibO) => {
+
+  const router = useRouter()
+
+  const nav = () => {
+    router.push({pathname: `/libs/[lib]`, params: {lib: libId, libName: libName}})
+  }
+
+  return (
+    <TouchableOpacity style={styles.libItemContainer} onPress={nav}>
+      <Text style={styles.libItemTitle}>{libName}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const Libs = () => {
+
+  const { user, auth } = useGlobalSearchParams();
+  const [data, setData] = useState(null);
+  const [search, setSearch] = useState('');
+  const timer = useRef(0);
+
+  const getLibs = async () => {
+    const reqBody: Request = {
+      user: {
+        username: user.toString(),
+        password: null,
+        token: null
+      },
+      book: null,
+      lib: null
+    }
+
+    const req = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: auth.toString(),
+      },
+      body: JSON.stringify(reqBody),
+    };
+
+    await fetch("http://10.0.2.2:8080/dev/v1/libs/get", req)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("failed getLibs");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // console.log(data.Data.libs); // DEBUG
+        setData(data.Data.libs);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  function debounce(func: Function, debounceTime: number) {
+    return () => {
+      clearTimeout(timer.current);
+
+      timer.current = setTimeout(func, debounceTime);
+    };
+  }
+
+  const searchLib = async () => {
+    return
+    const reqBody: Request = {
+      user: {
+        username: user.toString(),
+        password: null,
+        token: null
+      },
+      book: null,
+      lib: {
+        lib_id: search,
+        lib_name: null
+      }
+    }
+
+    const req = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth}`,
+      },
+      body: JSON.stringify(reqBody),
+    };
+
+    await fetch("http://10.0.2.2:8080/dev/v1/libs/search", req)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("failed searchLib");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setData(data.Data.libs);
+      })
+      .catch((e) => {
+        setData(null);
+        console.error(e);
+      });
+  };
+
+  const searchDebounce = debounce(() => {
+    searchLib();
+    console.log(data);
+  }, 500);
+
+  useEffect(searchDebounce, [search]);
+
+  useEffect(() => {
+    getLibs();
+  }, []);
+
+  return (
+    <View>
+      <Stack.Screen
+        options={{
+          title: "Libraries",
+        }}
+      />
+      <TextInput onChangeText={text => setSearch(text)} placeholder="Search libraries"/>
+      <View style={styles.libListHeaderContainer}>
+        <Text style={styles.libListHeader}>My Libraries</Text>
+      </View>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id}/>}
+      />
+    </View>
+  );
+};
+
+export default Libs;
+
+const styles = StyleSheet.create({
+
+  libListHeaderContainer: {
+    backgroundColor: 'hsl(0, 0%, 90%)',
+    width: '100%',
+    height: 50,
+  },
+
+  libListHeader: {
+    height: '100%',
+    paddingTop: 'auto',
+    paddingBottom: 'auto',
+    marginLeft: 10,
+    fontSize: 35,
+    fontWeight: '500'
+  },
+
+  libItemContainer: {
+    width: "100%",
+    height: 100,
+    backgroundColor: "hsl(0, 0%, 100%)",
+    paddingLeft: 10,
+    flex: 1,
+    justifyContent: "center",
+    borderTopColor: "hsl(0, 0%, 90%)",
+    borderBottomColor: "hsl(0, 0%, 100%)",
+    borderRightColor: "hsl(0, 0%, 100%)",
+    borderLeftColor: "hsl(0, 0%, 100%)",
+    borderWidth: 2,
+  },
+
+  libItemTitle: {
+    fontSize: 25,
+    fontWeight: "500",
+  },
+});
