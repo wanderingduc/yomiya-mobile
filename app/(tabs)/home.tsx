@@ -10,6 +10,7 @@ import {
   useRouter,
 } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Request from "@/constants/Request";
 
 
 type Book = {
@@ -23,7 +24,7 @@ export const BookItem = ({book_id, title, author}: Book) => {
   const router = useRouter()
 
   const nav = () => {
-    router.push({pathname: `/books/[book]`, params: {book: title,id: book_id, title: title, author: author}})
+    router.push({pathname: `/books/[book]`, params: {book: title,book_id: book_id, title: title, author: author}})
   }
 
   return (
@@ -63,7 +64,7 @@ const Home = () => {
 
   const getBook = async () => { // NOT FINISHED
 
-    const token = await AsyncStorage.getItem('token')
+    // const token = await AsyncStorage.getItem('token')
 
     const ob = {
       book_id: "1234567890123",
@@ -71,13 +72,13 @@ const Home = () => {
       author: ""
     };
 
-    console.log(`Bearer ${token}`)
+    console.log(`Bearer ${auth}`)
 
     const req = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${auth}`,
       },
       body: JSON.stringify(ob),
     };
@@ -97,18 +98,23 @@ const Home = () => {
 
   const getBooks = async () => {
 
-    const ob = {
-      username: name,
-      password: ""
+    const reqBody: Request= {
+      user: {
+        username: name.toString(),
+        password: null,
+        token: null
+      },
+      book: null,
+      lib: null
     }
 
     const req = {
       method: "POST",
       headers: {
         "Content-Type":"application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${auth}`
       },
-      body: JSON.stringify(ob)
+      body: JSON.stringify(reqBody)
     }
 
     await fetch('http://10.0.2.2:8080/dev/v1/books/get', req)
@@ -123,7 +129,7 @@ const Home = () => {
       // for (let i=0; i<body.length; i++) {
       //   console.log(body[i])
       // }
-      setBooks(data.Data)
+      setBooks(data.Data.books)
       setLoading(false)
     })
     .catch((e) => {
@@ -139,7 +145,7 @@ const Home = () => {
     <View>
       {/* <Text onPress={getBooks}>{name}'s home page</Text> */}
       <View style={styles.bookListHeaderContainer}>
-        <Text style={styles.bookListHeader}>Books</Text>
+        <Text style={styles.bookListHeader}>My Books</Text>
       </View>
       {/* <Link href="/" replace>
         homme
@@ -148,6 +154,9 @@ const Home = () => {
         data={books}
         renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author}/>}
       />
+      <View style={styles.bookListHeaderContainer}>
+        <Text style={styles.bookListHeader}>Recommendations</Text>
+      </View>
     </View>
     </>
   );

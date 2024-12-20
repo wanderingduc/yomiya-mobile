@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useGlobalSearchParams } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BookItem } from './home'
+import Request from '@/constants/Request'
 
 const Search = () => {
 
@@ -24,10 +25,18 @@ const Search = () => {
 
     const searchBook = async () => {
 
-        const ob = {
-            book_id: search,
-            title: '',
-            author: '',
+        const reqBody: Request = {
+            user: {
+                username: name.toString(),
+                password: null,
+                token: null
+            },
+            book: {
+                book_id: search,
+                title: null,
+                author: null
+            },
+            lib: null
         }
 
 
@@ -37,7 +46,7 @@ const Search = () => {
                 "Content-Type":"application/json",
                 Authorization: `Bearer ${auth}`
             },
-            body: JSON.stringify(ob)
+            body: JSON.stringify(reqBody)
         }
 
         await fetch('http://10.0.2.2:8080/dev/v1/books/search', req)
@@ -48,7 +57,7 @@ const Search = () => {
             return res.json()
         })
         .then((data) => {
-            setData(data.Data)
+            setData(data.Data.books)
             
         })
         .catch((e) => {

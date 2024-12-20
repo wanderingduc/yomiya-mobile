@@ -4,13 +4,14 @@ import React from 'react';
 
 const _layout = () => {
 
-  const name = useGlobalSearchParams()
+  const {name, auth} = useGlobalSearchParams()
 
   return (
     <Tabs screenOptions={{headerTitleAlign: 'center'}} >
-        <Tabs.Screen name='home' options={{headerShown: true}} initialParams={{user: name}}/>
-        <Tabs.Screen name='search' options={{headerShown: true}} initialParams={{user: name}}/>
-        <Tabs.Screen name='profile' options={{headerShown: true}} initialParams={{user: name}}/>
+        <Tabs.Screen name='home' options={{headerShown: true}} initialParams={{user: name, auth: auth}}/>
+        <Tabs.Screen name='libs' options={{headerShown: true}} initialParams={{user: name, auth: auth}}/>
+        <Tabs.Screen name='search' options={{headerShown: true}} initialParams={{user: name, auth: auth}}/>
+        <Tabs.Screen name='profile' options={{headerShown: true}} initialParams={{user: name, auth: auth}}/>
     </Tabs>
   )
 }

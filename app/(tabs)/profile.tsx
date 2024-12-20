@@ -1,6 +1,7 @@
 import { View, Text, FlatList, StyleSheet, SectionList, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useGlobalSearchParams, useLocalSearchParams, useRouter,  } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -33,7 +34,13 @@ const Profile = () => {
 
   const reload = () => {}
   const home = () => {router.navigate('/(tabs)/home')}
-  const signout = () => {router.replace('/signout')}
+  const testtoken = () => {router.replace('/signout')}
+  const signout = async () => {
+    await AsyncStorage.removeItem('token')
+    await AsyncStorage.removeItem('user')
+    router.replace('/signout')
+  }
+  const adminmsg = () => {}
 
   const Data = [
     {
@@ -52,8 +59,18 @@ const Profile = () => {
         {
           id: "general",
           content: "General",
-          action: signout
+          action: testtoken
         },
+        {
+          id: "adminmsg",
+          content: "Messages from admin",
+          action: adminmsg
+        },
+        {
+          id: "signout",
+          content: "Sign out",
+          action: signout
+        }
       ],
     },
     // {
