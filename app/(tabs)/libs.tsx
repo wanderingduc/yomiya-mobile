@@ -18,14 +18,16 @@ import Request from "@/constants/Request";
 type LibO = {
   libName: string;
   libId: string
+  user: string
+  token: string
 };
 
-const LibItem = ({ libName, libId }: LibO) => {
+const LibItem = ({ libName, libId, user, token }: LibO) => {
 
   const router = useRouter()
 
   const nav = () => {
-    router.push({pathname: `/libs/[lib]`, params: {lib: libId, libName: libName}})
+    router.push({pathname: `/libs/[lib]`, params: {lib: libId, libName: libName, user: user, token: token}})
   }
 
   return (
@@ -37,7 +39,7 @@ const LibItem = ({ libName, libId }: LibO) => {
 
 const Libs = () => {
 
-  const { user, auth } = useGlobalSearchParams();
+  const { user, auth } = useLocalSearchParams();
   const [data, setData] = useState(null);
   const [search, setSearch] = useState('');
   const timer = useRef(0);
@@ -70,7 +72,7 @@ const Libs = () => {
         return res.json();
       })
       .then((data) => {
-        // console.log(data.Data.libs); // DEBUG
+        // console.error(data.Data.libs); // DEBUG
         setData(data.Data.libs);
       })
       .catch((e) => {
@@ -150,7 +152,7 @@ const Libs = () => {
       </View>
       <FlatList
         data={data}
-        renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id}/>}
+        renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id} user={user.toString()} token={auth.toString()} />}
       />
     </View>
   );
