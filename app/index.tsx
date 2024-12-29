@@ -176,7 +176,7 @@ const Login = () => {
       </TouchableOpacity>
       <Text style={styles.create}>
         Don't have an account?{" "}
-        <Link style={styles.link} href="/">
+        <Link style={styles.link} href="/signup" replace>
           Create one
         </Link>
       </Text>
