@@ -165,7 +165,7 @@ const Book = () => {
       />
     <View>
 
-      <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={styles.bookImage} />
+      <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={styles.bookImage} /> {/* Make hook to fetch correct image from s3 bucket (after implementing bucket) */}
       
       <Text style={styles.bookTitle} >
         {title}
