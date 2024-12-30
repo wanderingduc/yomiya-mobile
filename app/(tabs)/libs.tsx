@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Button
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -22,7 +23,7 @@ type LibO = {
   token: string
 };
 
-const LibItem = ({ libName, libId, user, token }: LibO) => {
+export const LibItem = ({ libName, libId, user, token }: LibO) => {
 
   const router = useRouter()
 
@@ -39,10 +40,16 @@ const LibItem = ({ libName, libId, user, token }: LibO) => {
 
 const Libs = () => {
 
+  const router = useRouter()
+
   const { user, auth } = useLocalSearchParams();
   const [data, setData] = useState(null);
   const [search, setSearch] = useState('');
   const timer = useRef(0);
+
+  const newLib = () => {
+    router.push('/newlib')
+  }
 
   const getLibs = async () => {
     const reqBody: Request = {
@@ -140,6 +147,7 @@ const Libs = () => {
   }, []);
 
   return (
+    <>
     <View>
       <Stack.Screen
         options={{
@@ -155,6 +163,8 @@ const Libs = () => {
         renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id} user={user.toString()} token={auth.toString()} />}
       />
     </View>
+    <TouchableOpacity style={styles.newButton} onPress={newLib}><Text style={styles.newButtonText} >New</Text></TouchableOpacity>
+    </>
   );
 };
 
@@ -195,4 +205,25 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "500",
   },
+
+  newButton: {
+    backgroundColor: "hsl(21, 78%, 48%)",
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    position: 'absolute',
+    bottom: 25,
+    right: 25,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2
+  },
+
+  newButtonText: {
+    color: "hsl(0, 0%, 100%)",
+    textAlign: 'center',
+    fontSize: 22
+  }
+
 });

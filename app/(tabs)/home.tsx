@@ -152,7 +152,7 @@ const Home = () => {
       </Link> */}
       <FlatList 
         data={books}
-        renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author}/>}
+        renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author} />}
       />
       <View style={styles.bookListHeaderContainer}>
         <Text style={styles.bookListHeader}>Recommendations</Text>
