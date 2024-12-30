@@ -127,6 +127,11 @@ const Book = () => {
       });
   };
 
+  const chooseLib = (lib: string) => {
+    setLib(lib)
+    setShow(!show)
+  }
+
   useEffect(() => {
     getLibs();
     getCreds();
@@ -152,7 +157,7 @@ const Book = () => {
         <FlatList
         style={show ? styles.visible : styles.invisible}
         data={data}
-        renderItem={({ item }) => <TouchableOpacity onPress={() => {setLib(item.lib_id)}} ><Text>{item.lib_name}</Text></TouchableOpacity> }
+        renderItem={({ item }) => <TouchableOpacity onPress={() => {chooseLib(item.lib_id)}} ><Text>{item.lib_name}</Text></TouchableOpacity> }
         extraData={data}
         contentContainerStyle={styles.flex}
       />
