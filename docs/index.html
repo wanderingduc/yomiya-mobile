@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Honbako</title>
+  </head>
+  <body>
+
+    <section class="warning" >
+      <p id="warning" >Page is still under development. Pictures are not representative of finished application. Currently only in english with other languages coming</p>
+    </section>
+
+    <header>
+      <div class="title-container">
+        <h1 class="title" id="title" >Honbako</h1>
+        <p class="title-desc" id="title-desc" >
+          An application for sharing your collection of books
+        </p>
+        <p class="title-desc-footnote" id="title-footnote" >(IOS support coming later)</p>
+        <div class="download-button" >
+            <p id="download-text" >Download Now</p>
+        </div>
+      </div>
+      <img
+        class="header-logo"
+        src="../assets/images/logoplaceholder.png"
+        alt="Logo"
+      />
+      <!-- IMAGE ONLY TEMPORARY DON'T PUSH TO REPO -->
+    </header>
+
+    <section class="flex-column-section" >
+        <h2 class="subtitle" id="features-subtitle" >Features</h2>
+        <div class="feature-container" >
+            <div class="feature-item" >
+                <img src="../assets/images/featureplaceholder.png" alt="Image of feature1" />
+                <h3 id="feature-title1" >Share your reads</h3>
+                <p id="feature-desc1" >Share your favourite books with your friends and others</p>
+            </div>
+            <div class="feature-item" >
+                <img src="../assets/images/featureplaceholder.png" alt="Image of feature1" />
+                <h3 id="feature-title2" >Multiple libraries</h3>
+                <p id="feature-desc2" >Make multiple libraries to categorize your reads</p>
+            </div>
+            <div class="feature-item" >
+                <img src="../assets/images/featureplaceholder.png" alt="Image of feature1" />
+                <h3 id="feature-title3" >Find new books</h3>
+                <p id="feature-desc3" >Find new books from your friends or try one recomended by the algorithm</p>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+      window.onload = getLang()
+
+      const ja = { // ADD TEXT IN JAPANESE
+        warning: "",
+        title: "",
+        titleDesc: "",
+        titleFootnote: "",
+        downloadText: "",
+        featuresSub: "",
+        featuresT1: "",
+        featuresD1: "",
+        featuresT2: "",
+        featuresD2: "",
+        featuresT3: "",
+        featuresD3: "",
+      }
+
+      const zh = { // ADD TEXT IN CHINESE
+        warning: "",
+        title: "",
+        titleDesc: "",
+        titleFootnote: "",
+        downloadText: "",
+        featuresSub: "",
+        featuresT1: "",
+        featuresD1: "",
+        featuresT2: "",
+        featuresD2: "",
+        featuresT3: "",
+        featuresD3: "",
+      }
+
+      const vn = { // ADD TEXT IN VIETNAMESE
+        warning: "",
+        title: "",
+        titleDesc: "",
+        titleFootnote: "",
+        downloadText: "",
+        featuresSub: "",
+        featuresT1: "",
+        featuresD1: "",
+        featuresT2: "",
+        featuresD2: "",
+        featuresT3: "",
+        featuresD3: "",
+      }
+
+      const kr = { // ADD TEXT IN KOREAN
+        warning: "",
+        title: "",
+        titleDesc: "",
+        titleFootnote: "",
+        downloadText: "",
+        featuresSub: "",
+        featuresT1: "",
+        featuresD1: "",
+        featuresT2: "",
+        featuresD2: "",
+        featuresT3: "",
+        featuresD3: "",
+      }
+
+      const warning = document.getElementById("warning")
+      const title = document.getElementById("title")
+      const titleDesc = document.getElementById("title-desc")
+      const titleFootnote = document.getElementById("title-footnote")
+      const downloadText = document.getElementById("download-text")
+      const featuresSub = document.getElementById("features-subtitles")
+      const featureT1 = document.getElementById("feature-title1")
+      const featureD1 = document.getElementById("feature-desc1")
+      const featureT2 = document.getElementById("feature-title2")
+      const featureD2 = document.getElementById("feature-desc2")
+      const featureT3 = document.getElementById("feature-title3")
+      const featureD3 = document.getElementById("feature-desc3")
+
+      function getLang() {
+
+        let userlang = navigator.language
+        console.log(userlang.slice(0, 2))
+
+      }
+    </script>
+  </body>
+</html>
