@@ -41,6 +41,6 @@ app-example
 scripts/
 hooks/
 components/
-assets/
+./assets/
 TODO.txt
 /devTest
