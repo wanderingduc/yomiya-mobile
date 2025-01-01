@@ -42,8 +42,9 @@ const Libs = () => {
 
   const router = useRouter()
 
-  const { user, auth } = useLocalSearchParams();
+  const { user, auth } = useGlobalSearchParams();
   const [data, setData] = useState(null);
+  const [newData, setNewData] = useState();
   const [search, setSearch] = useState('');
   const timer = useRef(0);
 
@@ -66,7 +67,7 @@ const Libs = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: auth.toString(),
+        Authorization: `Bearer ${auth}`,
       },
       body: JSON.stringify(reqBody),
     };
@@ -96,7 +97,6 @@ const Libs = () => {
   }
 
   const searchLib = async () => {
-    return
     const reqBody: Request = {
       user: {
         username: user.toString(),
@@ -105,8 +105,8 @@ const Libs = () => {
       },
       book: null,
       lib: {
-        lib_id: search,
-        lib_name: null
+        lib_id: null,
+        lib_name: search
       }
     }
 
@@ -127,7 +127,8 @@ const Libs = () => {
         return res.json();
       })
       .then((data) => {
-        setData(data.Data.libs);
+        // console.log(data.Data.libs)
+        setNewData(data.Data.libs);
       })
       .catch((e) => {
         setData(null);
@@ -135,14 +136,19 @@ const Libs = () => {
       });
   };
 
+  // useEffect(() => {
+  //   console.log(data)
+  // }, [data])
+
   const searchDebounce = debounce(() => {
     searchLib();
-    console.log(data);
+    // console.log(data);
   }, 500);
 
   useEffect(searchDebounce, [search]);
 
   useEffect(() => {
+    // console.log(auth) // DEBUG
     getLibs();
   }, []);
 
@@ -155,6 +161,14 @@ const Libs = () => {
         }}
       />
       <TextInput onChangeText={text => setSearch(text)} placeholder="Search libraries"/>
+      <View style={newData ? styles.libListHeaderContainer : styles.hidden}>
+        <Text style={styles.libListHeader}>Search Result</Text>
+      </View>
+      <FlatList
+        data={newData}
+        renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id} user={user.toString()} token={auth.toString()} />}
+        extraData={newData}
+      />
       <View style={styles.libListHeaderContainer}>
         <Text style={styles.libListHeader}>My Libraries</Text>
       </View>
@@ -171,6 +185,10 @@ const Libs = () => {
 export default Libs;
 
 const styles = StyleSheet.create({
+
+  hidden: {
+    display: 'none'
+  },
 
   libListHeaderContainer: {
     backgroundColor: 'hsl(0, 0%, 90%)',
