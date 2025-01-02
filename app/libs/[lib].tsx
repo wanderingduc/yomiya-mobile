@@ -9,7 +9,7 @@ import Request from "@/constants/Request";
 import { BookItem } from "../(tabs)/home";
 
 const Lib = () => {
-  const { lib, libName, user, token } = useLocalSearchParams();
+  const { lib, libName, user, auth } = useGlobalSearchParams();
 
   const [books, setBooks] = useState(null);
   const [searchBooks, setSearchBooks] = useState(null);
@@ -17,6 +17,9 @@ const Lib = () => {
   const timer = useRef(0);
 
   const getBooks = async () => {
+
+    console.log("A")
+
     const reqBody: Request = {
       user: {
         username: user.toString(),
@@ -34,12 +37,12 @@ const Lib = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.toString()}`,
+        Authorization: `Bearer ${auth.toString()}`,
       },
       body: JSON.stringify(reqBody),
     };
 
-    await fetch("http://10.0.2.2:8080/dev/v1/libs/libid", req)
+    fetch("http://10.0.2.2:8080/dev/v1/auth/libs/libid", req)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error getBooks");
@@ -47,7 +50,7 @@ const Lib = () => {
         return res.json();
       })
       .then((data) => {
-        // console.log(data.Data.books) // DEBUG
+        console.log(data.Data.books) // DEBUG
         setBooks(data.Data.books);
       })
       .catch((e) => {
@@ -89,7 +92,7 @@ const Lib = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.toString()}`,
+        Authorization: `Bearer ${auth.toString()}`,
       },
       body: JSON.stringify(reqBody),
     };
@@ -117,6 +120,7 @@ const Lib = () => {
 
   useEffect(() => {
     getBooks();
+    // console.log(token) // DEBUG
   }, []);
 
   useEffect(() => {
