@@ -28,7 +28,7 @@ export const LibItem = ({ libName, libId, user, token }: LibO) => {
   const router = useRouter()
 
   const nav = () => {
-    router.push({pathname: `/libs/[lib]`, params: {lib: libId, libName: libName, user: user, token: token}})
+    router.push({pathname: `/libs/[lib]`, params: {lib: libId, libName: libName, user: user, auth: token}})
   }
 
   return (
@@ -172,10 +172,12 @@ const Libs = () => {
       <View style={styles.libListHeaderContainer}>
         <Text style={styles.libListHeader}>My Libraries</Text>
       </View>
+      {(user != null && auth != null) ?
       <FlatList
         data={data}
-        renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id} user={user.toString()} token={auth.toString()} />}
-      />
+        renderItem={({ item }) => <LibItem libName={item.lib_name} libId={item.lib_id} user={user.toString()} token={auth.toString()}  />}
+        extraData={user}
+      /> : null}
     </View>
     <TouchableOpacity style={styles.newButton} onPress={newLib}><Text style={styles.newButtonText} >New</Text></TouchableOpacity>
     </>

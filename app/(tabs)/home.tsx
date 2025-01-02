@@ -54,6 +54,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // console.log(auth) // DEBUG
     getBooks()
   }, [])
 

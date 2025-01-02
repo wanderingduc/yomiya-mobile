@@ -32,6 +32,10 @@ const Profile = () => {
 
   const router = useRouter()
 
+  useEffect(() => {
+    // console.log(auth) // DEBUG 
+  }, [])
+
   const reload = () => {}
   const home = () => {router.navigate('/(tabs)/home')}
   const testtoken = () => {router.replace('/signout')}

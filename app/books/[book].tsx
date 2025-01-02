@@ -57,6 +57,7 @@ const Book = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${auth}`
       },
       body: JSON.stringify(reqBody),
     };
@@ -149,11 +150,12 @@ const Book = () => {
   useEffect(() => {
     getLibs();
     getCreds();
+    // console.log(auth) // DEBUG
   }, []);
 
   useEffect(() => {
     // DEBUG
-    console.log(lib);
+    // console.log(lib);
   }, [lib]);
 
   return (
