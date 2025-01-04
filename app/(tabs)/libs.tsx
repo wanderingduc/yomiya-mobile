@@ -57,6 +57,8 @@ const Libs = () => {
       user: {
         username: user.toString(),
         password: null,
+        created_at: null,
+        updated_at: null,
         token: null
       },
       book: null,
@@ -101,6 +103,8 @@ const Libs = () => {
       user: {
         username: user.toString(),
         password: null,
+        created_at: null,
+        updated_at: null,
         token: null
       },
       book: null,

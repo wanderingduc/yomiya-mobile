@@ -49,6 +49,8 @@ const Login = () => {
       user: {
         username: user,
         password: null,
+        created_at: null,
+        updated_at: null,
         token: token,
       },
       book: null,
@@ -89,7 +91,7 @@ const Login = () => {
       });
   };
 
-  const signin = () => {
+  const signin = async () => {
     clearToken();
 
     if (uname == "" || pword == "") {
@@ -101,17 +103,12 @@ const Login = () => {
       user: {
         username: uname,
         password: pword,
-        token: "",
+        created_at: null,
+        updated_at: null,
+        token: null,
       },
-      book: {
-        book_id: "",
-        title: "",
-        author: "",
-      },
-      lib: {
-        lib_id: "",
-        lib_name: "",
-      },
+      book: null,
+      lib: null,
     };
 
     const req = {
@@ -122,7 +119,7 @@ const Login = () => {
       body: JSON.stringify(reqBody),
     };
 
-    fetch("http://10.0.2.2:8080/dev/v1/users/auth", req)
+    await fetch("http://10.0.2.2:8080/dev/v1/users/auth", req)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Incorrect username or password");

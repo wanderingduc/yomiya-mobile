@@ -44,6 +44,8 @@ const Book = () => {
       user: {
         username: "testuser",
         password: null,
+        created_at: null,
+        updated_at: null,
         jwt: null,
       },
       book: null,
@@ -103,6 +105,8 @@ const Book = () => {
       user: {
         username: user.toString(),
         password: null,
+        created_at: null,
+        updated_at: null,
         token: null,
       },
       book: {

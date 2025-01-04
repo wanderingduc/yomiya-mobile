@@ -25,6 +25,8 @@ const SignUp = () => { // NEEDS TESTING
         user: {
             username: uname,
             password: pword,
+            created_at: null,
+            updated_at: null,
             token: null
         },
         book: null,
@@ -47,11 +49,11 @@ const SignUp = () => { // NEEDS TESTING
         return res.json()
     })
     .then((data) => {
-        console.log(data.Data.user.token)
+        console.log(data.Data.user[0].token)
         setWarn('')
         router.replace({
             pathname: "/(tabs)/home",
-            params: { name: uname, auth: data.Data.user.token },
+            params: { name: uname, auth: data.Data.user[0].token },
           });
     })
     .catch((e) => {

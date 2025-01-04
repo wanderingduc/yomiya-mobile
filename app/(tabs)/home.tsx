@@ -103,6 +103,8 @@ const Home = () => {
       user: {
         username: name.toString(),
         password: null,
+        created_at: null,
+        updated_at: null,
         token: null
       },
       book: null,
