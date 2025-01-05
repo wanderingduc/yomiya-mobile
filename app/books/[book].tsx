@@ -96,7 +96,8 @@ const Book = () => {
     console.log(token, user);
   };
 
-  const showLibs = () => {
+  const showLibs = async () => {
+    await getLibs()
     setShow(!show);
   };
 
@@ -115,8 +116,8 @@ const Book = () => {
         author: author.toString(),
       },
       lib: {
-        lib_id: lib,
-        lib_name: null,
+        lib_id: select.lib_id,
+        lib_name: select.lib_name,
       },
     };
 
@@ -132,6 +133,7 @@ const Book = () => {
     await fetch("http://10.0.2.2:8080/dev/v1/libs/addbook", req)
       .then((res) => {
         if (!res.ok) {
+          console.log(res.status)
           throw new Error("addBook");
         }
         return res.json();
@@ -152,15 +154,15 @@ const Book = () => {
   };
 
   useEffect(() => {
-    getLibs();
+    // getLibs();
     getCreds();
     // console.log(auth) // DEBUG
   }, []);
 
-  useEffect(() => {
-    // DEBUG
-    // console.log(lib);
-  }, [lib]);
+  // useEffect(() => {
+  //   // DEBUG
+  //   // console.log(lib);
+  // }, [lib]);
 
   return (
     <>

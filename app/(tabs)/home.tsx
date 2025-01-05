@@ -17,9 +17,10 @@ type Book = {
   book_id: string
   title: string
   author: string
+  inverted: boolean
 }
 
-export const BookItem = ({book_id, title, author}: Book) => {
+export const BookItem = ({book_id, title, author, inverted}: Book) => {
 
   const router = useRouter()
 
@@ -27,13 +28,23 @@ export const BookItem = ({book_id, title, author}: Book) => {
     router.push({pathname: `/books/[book]`, params: {book: title,book_id: book_id, title: title, author: author}})
   }
 
-  return (
-  <TouchableOpacity style={styles.bookItemContainer} onPress={nav}>
-    <Text style={styles.bookItemTitle}>{title}</Text>
-    <Text style={styles.bookItemAuthor}>{author}</Text>
-    <Text style={styles.bookItemId}>{book_id}</Text>
-  </TouchableOpacity>
-  )
+  if (inverted) {
+    return (
+      <TouchableOpacity style={styles.bookItemContainerI} onPress={nav}>
+        <Text style={styles.bookItemTitleI}>{title}</Text>
+        <Text style={styles.bookItemAuthorI}>{author}</Text>
+        <Text style={styles.bookItemIdI}>{book_id}</Text>
+      </TouchableOpacity>
+      )
+  }else{
+    return (
+    <TouchableOpacity style={styles.bookItemContainer} onPress={nav}>
+      <Text style={styles.bookItemTitle}>{title}</Text>
+      <Text style={styles.bookItemAuthor}>{author}</Text>
+      <Text style={styles.bookItemId}>{book_id}</Text>
+    </TouchableOpacity>
+    )
+}
 }
 
 
@@ -73,8 +84,6 @@ const Home = () => {
       author: ""
     };
 
-    console.log(`Bearer ${auth}`)
-
     const req = {
       method: "POST",
       headers: {
@@ -92,8 +101,11 @@ const Home = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data.Data);
+        // console.log(data.Data);
         
+      })
+      .catch((e) => {
+        console.error(e)
       });
   };
 
@@ -155,7 +167,7 @@ const Home = () => {
       </Link> */}
       <FlatList 
         data={books}
-        renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author} />}
+        renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author} inverted={false} />}
       />
       <View style={styles.bookListHeaderContainer}>
         <Text style={styles.bookListHeader}>Recommendations</Text>
@@ -212,6 +224,37 @@ const styles = StyleSheet.create({
   bookItemId: {
     fontSize: 15,
     color: 'hsl(0, 0%, 45%)'
+  },
+
+  bookItemContainerI: {
+    width: '100%',
+    height: 100,
+    backgroundColor: 'hsl(21, 78%, 48%)',
+    paddingLeft: 10,
+    flex: 1,
+    justifyContent: 'center',
+    borderTopColor: 'hsl(0, 0%, 90%)',
+    borderBottomColor: 'hsl(21, 78%, 48%)',
+    borderRightColor: 'hsl(21, 78%, 48%)',
+    borderLeftColor: 'hsl(21, 78%, 48%)',
+    borderWidth: 2
+  },
+
+  bookItemTitleI: {
+    fontSize: 25,
+    fontWeight: '500',
+    color: 'hsl(0, 0%, 100%)'
+  },
+
+  bookItemAuthorI: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: 'hsl(0, 0%, 95%)'
+  },
+
+  bookItemIdI: {
+    fontSize: 15,
+    color: 'hsl(0, 0%, 90%)'
   },
 
   loadingWheel: {

@@ -128,10 +128,10 @@ const Login = () => {
       })
       .then((data) => {
         setWarn("");
-        storeToken(data.Data.user.token, uname);
+        storeToken(data.Data.user[0].token, uname);
         router.replace({
           pathname: "/(tabs)/home",
-          params: { name: uname, auth: data.Data.user.token },
+          params: { name: uname, auth: data.Data.user[0].token },
         });
       })
       .catch((e) => {

@@ -45,6 +45,7 @@ const Profile = () => {
     router.replace('/signout')
   }
   const adminmsg = () => {}
+  const bugreport = () => {router.push('/report')}
 
   const Data = [
     {
@@ -66,9 +67,9 @@ const Profile = () => {
           action: testtoken
         },
         {
-          id: "adminmsg",
-          content: "Messages from admin",
-          action: adminmsg
+          id: "bugreport",
+          content: "Report bug",
+          action: bugreport
         },
         {
           id: "signout",

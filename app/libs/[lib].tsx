@@ -135,16 +135,17 @@ const Lib = () => {
   }, [search]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: libName.toString(),
+          title: "Books",
         }}
       />
       <TextInput
         style={styles.search}
         onChangeText={(text) => setSearch(text)}
         placeholder="Search library"
+        onBlur={() => setSearchBooks(null)}
       />
       <View style={searchBooks ? styles.shown : styles.hidden}>
         <FlatList
@@ -154,6 +155,7 @@ const Lib = () => {
               book_id={item.book_id}
               title={item.title}
               author={item.author}
+              inverted={true}
             />
           )}
           extraData={searchBooks}
@@ -169,6 +171,7 @@ const Lib = () => {
             book_id={item.book_id}
             title={item.title}
             author={item.author}
+            inverted={false}
           />
         )}
         extraData={books}
@@ -180,6 +183,12 @@ const Lib = () => {
 export default Lib;
 
 const styles = StyleSheet.create({
+
+  container: {
+    height: '100%',
+    // backgroundColor: 'hsl(0, 0%, 95%)'
+  },
+
   search: {
     margin: 0,
     paddingLeft: 10,
@@ -188,6 +197,11 @@ const styles = StyleSheet.create({
     display: "flex",
     backgroundColor: "hsl(0, 0%, 100%)",
     color: "hsl(21, 78%, 48%)",
+  },
+
+  searchItem: {
+    backgroundColor: 'hsl(21, 78%, 48%)',
+    color: 'hsl(0, 0%, 100%)'
   },
 
   hidden: {

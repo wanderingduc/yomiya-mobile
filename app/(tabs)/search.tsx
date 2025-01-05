@@ -38,7 +38,7 @@ const Search = () => {
                 token: null
             },
             book: {
-                book_id: search,
+                book_id: search.toString(),
                 title: null,
                 author: null
             },
@@ -58,11 +58,13 @@ const Search = () => {
         await fetch('http://10.0.2.2:8080/dev/v1/books/search', req)
         .then((res) => {
             if (!res.ok) {
+                // console.log(res.status)
                 throw new Error("fuck you")
             }
             return res.json()
         })
         .then((data) => {
+            // console.log(data.Data.books)
             setData(data.Data.books)
             
         })
@@ -115,7 +117,7 @@ const Search = () => {
             return res.json()
         })
         .then((data) => {
-            console.log(data.Success)
+            // console.log(data.Success)
             setVisible(!visible)
         })
         .catch((e) => {
@@ -135,14 +137,14 @@ const Search = () => {
     <>
     <View>
         <TextInput placeholder='Search' onChangeText={text => {setSearch(text)}} />
-      <FlatList data={data} renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author} />} extraData={data}/>
+      <FlatList data={data} renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author} inverted={false} />} extraData={data}/>
     </View>
     <View style={styles.newButtonContainer} >
         <TouchableOpacity style={styles.newButton} onPress={() => setVisible(!visible)} >
             <Text style={styles.newButtonText} >Can't find your book?</Text>
         </TouchableOpacity>
     </View>
-    <Modal visible={!visible} style={styles.newBookContainer} animationType='slide' onRequestClose={() => setVisible(!visible)} >
+    <Modal visible={visible} style={styles.newBookContainer} animationType='slide' onRequestClose={() => setVisible(!visible)} >
         <View style={styles.inputContainer} >
         <Text style={styles.inputLbl} >Title</Text>
         <TextInput style={styles.inputObj} placeholder='The tale of books'
