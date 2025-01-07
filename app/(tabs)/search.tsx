@@ -136,7 +136,7 @@ const Search = () => {
   return (
     <>
     <View>
-        <TextInput placeholder='Search' onChangeText={text => {setSearch(text)}} />
+        <TextInput placeholder='Search' onChangeText={text => {setSearch(text)}} style={styles.searchField} />
       <FlatList data={data} renderItem={({item}) => <BookItem book_id={item.book_id} title={item.title} author={item.author} inverted={false} />} extraData={data}/>
     </View>
     <View style={styles.newButtonContainer} >
@@ -194,6 +194,11 @@ const Search = () => {
 export default Search 
 
 const styles = StyleSheet.create({
+
+    searchField: {
+        fontSize: 22,
+        paddingLeft: 10
+    },
 
     newButtonContainer: {
         marginTop: 'auto',
