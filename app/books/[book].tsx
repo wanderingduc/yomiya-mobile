@@ -72,7 +72,7 @@ const Book = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data.Data.libs);
+        // console.log(data.Data.libs);
         setSelect({
           lib_id: data.Data.libs[0].lib_id,
           lib_name: data.Data.libs[0].lib_name,
@@ -93,7 +93,7 @@ const Book = () => {
       setAuth(token);
       setUser(user);
     }
-    console.log(token, user);
+    // console.log(token, user);
   };
 
   const showLibs = async () => {
@@ -173,7 +173,7 @@ const Book = () => {
       />
     <View>
 
-      <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={styles.bookImage} /> {/* Make hook to fetch correct image from s3 bucket (after implementing bucket) */}
+      <Image source={require('../../assets/images/bookplaceholder.png')} style={styles.bookImage} /> {/* Make hook to fetch correct image from s3 bucket (after implementing bucket) */}
       
       <Text style={styles.bookTitle} >
         {title}
@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
   bookImage: {
     width: 400,
     height: 500,
+    marginTop: 10,
     marginHorizontal: 'auto'
   },
 
