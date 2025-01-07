@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, SectionList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet, SectionList, TouchableOpacity, Alert } from "react-native";
 import React, { useEffect } from "react";
 import { useGlobalSearchParams, useLocalSearchParams, useRouter,  } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,6 +36,10 @@ const Profile = () => {
     // console.log(auth) // DEBUG 
   }, [])
 
+  const underDevAlert = () => {
+    Alert.alert("Under development")
+  }
+
   const reload = () => {}
   const home = () => {router.navigate('/(tabs)/home')}
   const testtoken = () => {router.replace('/signout')}
@@ -54,7 +58,7 @@ const Profile = () => {
         {
           id: "profile",
           content: "Profile",
-          action: reload
+          action: underDevAlert
         },
         {
           id: "home",
@@ -64,7 +68,7 @@ const Profile = () => {
         {
           id: "general",
           content: "General",
-          action: testtoken
+          action: underDevAlert
         },
         {
           id: "bugreport",
