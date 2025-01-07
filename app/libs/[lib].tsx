@@ -18,8 +18,6 @@ const Lib = () => {
 
   const getBooks = async () => {
 
-    console.log("A")
-
     const reqBody: Request = {
       user: {
         username: user.toString(),
@@ -52,7 +50,7 @@ const Lib = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data.Data.books) // DEBUG
+        // console.log(data.Data.books) // DEBUG
         setBooks(data.Data.books);
       })
       .catch((e) => {
@@ -185,8 +183,7 @@ export default Lib;
 const styles = StyleSheet.create({
 
   container: {
-    height: '100%',
-    // backgroundColor: 'hsl(0, 0%, 95%)'
+    height: '100%'
   },
 
   search: {
